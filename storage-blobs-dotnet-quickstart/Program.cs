@@ -56,15 +56,9 @@ namespace LsmUpdater
             Console.WriteLine("Azure Blob storage - JB sample");
             Console.WriteLine();
 
-			var client = new BlobClient( LsmStorageConnectionString, "coherentmeterconnection" );
+            ProcessAsync().GetAwaiter().GetResult();
 
-			foreach( var item in client.GetContainerList( client.Container ) )
-			{
-				Debug.WriteLine( $"{item.Uri}" );
-			}
-
-
-            //ProcessAsync().GetAwaiter().GetResult();
+			TestBlobClient();
 
             Console.WriteLine("Press any key to exit the sample application.");
             Console.ReadLine();
@@ -88,7 +82,7 @@ namespace LsmUpdater
 
 
 			// Check whether the connection string can be parsed.
-			if( CloudStorageAccount.TryParse(storageConnectionString, out storageAccount))
+			if( CloudStorageAccount.TryParse( LsmStorageConnectionString, out storageAccount))
             {
                 try
                 {
@@ -191,5 +185,18 @@ namespace LsmUpdater
 			await cloudBlockBlob.DownloadToFileAsync( destinationFile, FileMode.Create );
 
 		}
+
+		public static void TestBlobClient()
+		{
+			var client = new BlobClient( LsmStorageConnectionString, "coherentmeterconnection" );
+
+			foreach( var item in client.GetContainerList( client.Container ) )
+			{
+				Debug.WriteLine( $"{item.Uri}" );
+			}
+
+
+		}
+
 	}
 }
