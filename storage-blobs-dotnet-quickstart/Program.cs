@@ -23,33 +23,48 @@
 //------------------------------------------------------------------------------
 
 
-namespace storage_blobs_dotnet_quickstart
+namespace LsmUpdater
 {
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
-    using System;
-    using System.IO;
+	using System;
+	using System.Diagnostics;
+	using System.IO;
     using System.Threading.Tasks;
 
-    /// <summary>
-    /// Azure Storage Quickstart Sample - Demonstrate how to upload, list, download, and delete blobs. 
-    ///
-    /// Note: This sample uses the .NET asynchronous programming model to demonstrate how to call Blob storage using the 
-    /// storage client library's asynchronous API's. When used in production applications, this approach enables you to improve the 
-    /// responsiveness of your application. Calls to Blob storage are prefixed by the await keyword. 
-    /// 
-    /// Documentation References: 
-    /// - Azure Storage client library for .NET - https://docs.microsoft.com/dotnet/api/overview/azure/storage?view=azure-dotnet
-    /// - Asynchronous Programming with Async and Await - http://msdn.microsoft.com/library/hh191443.aspx
-    /// </summary>
+	/// <summary>
+	/// Azure Storage Quickstart Sample - Demonstrate how to upload, list, download, and delete blobs. 
+	///
+	/// Note: This sample uses the .NET asynchronous programming model to demonstrate how to call Blob storage using the 
+	/// storage client library's asynchronous API's. When used in production applications, this approach enables you to improve the 
+	/// responsiveness of your application. Calls to Blob storage are prefixed by the await keyword. 
+	/// 
+	/// Documentation References: 
+	/// - Azure Storage client library for .NET - https://docs.microsoft.com/dotnet/api/overview/azure/storage?view=azure-dotnet
+	/// - Asynchronous Programming with Async and Await - http://msdn.microsoft.com/library/hh191443.aspx
+	/// </summary>
 
-    public static class Program
+	public static class Program
     {
-        public static void Main()
+		public static string LsmStorageConnectionString = @"DefaultEndpointsProtocol=https;"
+			+ "AccountName=lsmupdates;"
+			+ "AccountKey= 8+/B2HL9guEhlOeJ3x8I086MHz+apW2TigJx3/D8YPpfawNnrqNugrff3y0BTlzvpyQ3LN2G/96irmiEMR/31g ==;"
+			+ "EndpointSuffix=core.windows.net";
+
+		public static void Main()
         {
-            Console.WriteLine("Azure Blob storage - .NET Quickstart sample");
+            Console.WriteLine("Azure Blob storage - JB sample");
             Console.WriteLine();
-            ProcessAsync().GetAwaiter().GetResult();
+
+			var client = new BlobClient( LsmStorageConnectionString, "coherentmeterconnection" );
+
+			foreach( var item in client.GetContainerList( client.Container ) )
+			{
+				Debug.WriteLine( $"{item.Uri}" );
+			}
+
+
+            //ProcessAsync().GetAwaiter().GetResult();
 
             Console.WriteLine("Press any key to exit the sample application.");
             Console.ReadLine();
